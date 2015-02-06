@@ -2079,7 +2079,7 @@ condition](#safe-assignment-in-condition).
 
 * <a name="no-blind-rescues"></a>
   Avoid rescuing the `Exception` class.  This will trap signals and calls to
-  `exit`, requiring you to `kill -9` the process.
+  `exit`, requiring you to `kill -9` the process. **Wishabi - the exception is if you raise it again.**
 <sup>[[link](#no-blind-rescues)]</sup>
 
   ```Ruby
