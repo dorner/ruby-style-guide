@@ -1846,7 +1846,7 @@ condition](#safe-assignment-in-condition).
 
 * <a name="duck-typing"></a>
   Prefer [duck-typing](http://en.wikipedia.org/wiki/Duck_typing) over
-  inheritance.
+  inheritance. **Wishabi - this should not necessarily be *preferred* - depends on the situation** 
 <sup>[[link](#duck-typing)]</sup>
 
   ```Ruby
