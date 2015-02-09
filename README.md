@@ -242,7 +242,7 @@ Translations of the guide are available in the following languages:
   The first variant is slightly more readable (and arguably more
   popular in the Ruby community in general). The second variant has
   the advantage of adding visual difference between block and hash
-  literals. Whichever one you pick - apply it consistently.
+  literals. Whichever one you pick - apply it consistently. **Wishabi - we use option 2**
 
   As far as embedded expressions go, there are also two acceptable
   options:
@@ -258,7 +258,7 @@ Translations of the guide are available in the following languages:
   The first style is extremely more popular and you're generally
   advised to stick with it. The second, on the other hand, is
   (arguably) a bit more readable. As with hashes - pick one style
-  and apply it consistently.
+  and apply it consistently. **Wishabi - we use option 1**
 
 * <a name="no-spaces-braces"></a>
   No spaces after `(`, `[` or before `]`, `)`. 
@@ -430,24 +430,21 @@ Translations of the guide are available in the following languages:
   ```
 
 * <a name="spaces-around-equals"></a>
-  Use spaces around the `=` operator when assigning default values to method
+  **Wishabi change** Do not use spaces around the `=` operator when assigning default values to method
   parameters:
 <sup>[[link](#spaces-around-equals)]</sup>
 
   ```Ruby
   # bad
-  def some_method(arg1=:default, arg2=nil, arg3=[])
+  def some_method(arg1 = :default, arg2 = nil, arg3 = [])
     # do something...
   end
 
   # good
-  def some_method(arg1 = :default, arg2 = nil, arg3 = [])
+  def some_method(arg1=:default, arg2=nil, arg3=[])
     # do something...
   end
   ```
-
-  While several Ruby books suggest the first style, the second is much more
-  prominent in practice (and arguably a bit more readable).
 
 * <a name="no-trailing-backslash"></a>
   Avoid line continuation `\` where not required. In practice, avoid using
@@ -1086,6 +1083,30 @@ condition](#safe-assignment-in-condition).
   end
   ```
 
+* <a name="no-self-unless-required"></a>
+  Use ``self`` for clarity whenever referencing instance variables (you can use ``@`` instead) or methods.
+<sup>[[link](#no-self-unless-required)]</sup>
+
+  ```Ruby
+  # bad
+  def ready?
+    if last_reviewed_at > last_updated_at
+      worker.update(content, options)
+      self.status = :in_progress
+    end
+    status == :verified
+  end
+
+  # good
+  def ready?
+    if self.last_reviewed_at > self.last_updated_at
+      self.worker.update(self.content, self.options)
+      self.status = :in_progress
+    end
+    self.status == :verified
+  end
+  ```
+
 * <a name="self-assignment"></a>
   Use shorthand self assignment operators whenever applicable.
 <sup>[[link](#self-assignment)]</sup>
@@ -1400,7 +1421,7 @@ condition](#safe-assignment-in-condition).
 
 * <a name="camelcase-classes"></a>
   Use `CamelCase` for classes and modules.  (Keep acronyms like HTTP, RFC, XML
-  uppercase.)
+  uppercase - **Wishabi note - this is not always possible in Rails due to inflections**.)
 <sup>[[link](#camelcase-classes)]</sup>
 
   ```Ruby
@@ -1680,39 +1701,6 @@ condition](#safe-assignment-in-condition).
     end
 
     def some_other_method
-    end
-  end
-  ```
-
-* <a name="module-function"></a>
-  Favor the use of `module_function` over `extend self` when you want to turn
-  a module's instance methods into class methods.
-<sup>[[link](#module-function)]</sup>
-
-  ```Ruby
-  # bad
-  module Utilities
-    extend self
-
-    def parse_something(string)
-      # do stuff here
-    end
-
-    def other_utility_method(number, string)
-      # do some more stuff
-    end
-  end
-
-  # good
-  module Utilities
-    module_function
-
-    def parse_something(string)
-      # do stuff here
-    end
-
-    def other_utility_method(number, string)
-      # do some more stuff
     end
   end
   ```
@@ -2079,7 +2067,7 @@ condition](#safe-assignment-in-condition).
 
 * <a name="no-blind-rescues"></a>
   Avoid rescuing the `Exception` class.  This will trap signals and calls to
-  `exit`, requiring you to `kill -9` the process. **Wishabi - the exception is if you raise it again.**
+  `exit`, requiring you to `kill -9` the process. **Wishabi - if you raise it again you can do this.**
 <sup>[[link](#no-blind-rescues)]</sup>
 
   ```Ruby
@@ -2156,9 +2144,22 @@ condition](#safe-assignment-in-condition).
 
 ## Collections
 
+* <a name="hash-literals"></a>
+  Use the Ruby 1.8 hash literal syntax for consistency purposes.
+<sup>[[link](#hash-literals)]</sup>
+
+  ```Ruby
+  # bad
+  hash = { one: 1, two: 2, three: 3 }
+
+  # good
+  hash = { :one => 1, :two => 2, :three => 3 }
+  ```
+
 * <a name="literal-array-hash"></a>
   Prefer literal array and hash creation notation (unless you need to pass
-  parameters to their constructors, that is).
+  parameters to their constructors, that is). **Wishabi - this may not be true for
+  multi-line arrays as it's a bit messier**
 <sup>[[link](#literal-array-hash)]</sup>
 
   ```Ruby
@@ -2260,7 +2261,8 @@ condition](#safe-assignment-in-condition).
   ```
 
 * <a name="no-modifying-collections"></a>
-  Do not modify a collection while traversing it.
+  Do not modify a collection while traversing it. **Wishabi - some rare cases require this but it should
+  be true most of the time**
 <sup>[[link](#no-modifying-collections)]</sup>
 
 * <a name="accessing-elements-directly"></a>
@@ -2611,31 +2613,6 @@ These sections are not really relevant for Wishabi, are used very rarely, or we 
 
   # good
   user.set(name: 'John', age: 45, permissions: { read: true })
-  ```
-
-* <a name="no-self-unless-required"></a>
-  Avoid `self` where not required. (It is only required when calling a self
-  write accessor.) **Wishabi - not true, we should use ``self`` basically all the time for clarity**
-<sup>[[link](#no-self-unless-required)]</sup>
-
-  ```Ruby
-  # bad
-  def ready?
-    if self.last_reviewed_at > self.last_updated_at
-      self.worker.update(self.content, self.options)
-      self.status = :in_progress
-    end
-    self.status == :verified
-  end
-
-  # good
-  def ready?
-    if last_reviewed_at > last_updated_at
-      worker.update(content, options)
-      self.status = :in_progress
-    end
-    status == :verified
-  end
   ```
 
 * <a name="double-amper-preprocess"></a>
@@ -3141,6 +3118,39 @@ These sections are not really relevant for Wishabi, are used very rarely, or we 
   end
   ```
 
+* <a name="module-function"></a>
+  Favor the use of `module_function` over `extend self` when you want to turn
+  a module's instance methods into class methods.
+<sup>[[link](#module-function)]</sup>
+
+  ```Ruby
+  # bad
+  module Utilities
+    extend self
+
+    def parse_something(string)
+      # do stuff here
+    end
+
+    def other_utility_method(number, string)
+      # do some more stuff
+    end
+  end
+
+  # good
+  module Utilities
+    module_function
+
+    def parse_something(string)
+      # do stuff here
+    end
+
+    def other_utility_method(number, string)
+      # do some more stuff
+    end
+  end
+  ```
+
 * <a name="alias-method"></a>
   Always use `alias_method` when aliasing methods of modules, classes, or
   singleton classes at runtime, as the lexical scope of `alias` leads to
@@ -3232,18 +3242,6 @@ These sections are not really relevant for Wishabi, are used very rarely, or we 
 
   # good
   STATES = %i(draft open closed)
-  ```
-
-* <a name="hash-literals"></a>
-  Use the Ruby 1.9 hash literal syntax when your hash keys are symbols. **Wishabi: For consistency we are staying with the old syntax**
-<sup>[[link](#hash-literals)]</sup>
-
-  ```Ruby
-  # bad
-  hash = { :one => 1, :two => 2, :three => 3 }
-
-  # good
-  hash = { one: 1, two: 2, three: 3 }
   ```
 
 * <a name="no-mixed-hash-syntaces"></a>
