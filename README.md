@@ -792,7 +792,8 @@ Translations of the guide are available in the following languages:
 
 * <a name="if-as-a-modifier"></a>
   Favor modifier `if/unless` usage when you have a single-line body. Another
-  good alternative is the usage of control flow `&&/||`.
+  good alternative is the usage of control flow `&&/||`. **Wishabi: Only use if
+  do_something is a method call, do not use for e.g. assignments or calculations**
 <sup>[[link](#if-as-a-modifier)]</sup>
 
   ```Ruby
@@ -1009,7 +1010,8 @@ condition](#safe-assignment-in-condition).
   blocks' contents be extracted into nifty methods?
 
 * <a name="no-explicit-return"></a>
-  Avoid `return` where not required for flow of control.
+  Avoid `return` where not required for flow of control. **Wishabi: The exception is if ``return``
+  is not the last line in the method, e.g. inside an if/else**
 <sup>[[link](#no-explicit-return)]</sup>
 
   ```Ruby
@@ -1059,7 +1061,7 @@ condition](#safe-assignment-in-condition).
   Don't use the return value of `=` (an assignment) in conditional expressions
   unless the assignment is wrapped in parentheses. This is a fairly popular
   idiom among Rubyists that's sometimes referred to as *safe assignment in
-  condition*.
+  condition*. **Wishabi: Preference not to do this but you can use brackets if you need**
 <sup>[[link](#safe-assignment-in-condition)]</sup>
 
   ```Ruby
@@ -1178,7 +1180,7 @@ condition](#safe-assignment-in-condition).
   Prefix with `_` unused block parameters and local variables. It's also
   acceptable to use just `_` (although it's a bit less descriptive). This
   convention is recognized by the Ruby interpreter and tools like RuboCop and
-  will suppress their unused variable warnings.
+  will suppress their unused variable warnings. **Wishabi: Not too important**
 <sup>[[link](#underscore-unused-vars)]</sup>
 
   ```Ruby
@@ -1205,32 +1207,6 @@ condition](#safe-assignment-in-condition).
     _, used_var = something_else(x)
     # ...
   end
-  ```
-
-* <a name="sprintf"></a>
-  Favor the use of `sprintf` and its alias `format` over the fairly cryptic
-  `String#%` method.
-<sup>[[link](#sprintf)]</sup>
-
-  ```Ruby
-  # bad
-  '%d %d' % [20, 10]
-  # => '20 10'
-
-  # good
-  sprintf('%d %d', 20, 10)
-  # => '20 10'
-
-  # good
-  sprintf('%{first} %{second}', first: 20, second: 10)
-  # => '20 10'
-
-  format('%d %d', 20, 10)
-  # => '20 10'
-
-  # good
-  format('%{first} %{second}', first: 20, second: 10)
-  # => '20 10'
   ```
 
 * <a name="ranges-or-between"></a>
@@ -1384,6 +1360,15 @@ condition](#safe-assignment-in-condition).
   # good
   array.reverse_each { ... }
   ```
+  
+* Replace simple blocks with the ``&`` syntax:
+```Ruby
+# bad:
+items.map { |item| item.name }
+
+# good:
+items.map(&:name)
+```
 
 ## Naming
 
@@ -1392,7 +1377,7 @@ condition](#safe-assignment-in-condition).
 > -- Phil Karlton
 
 * <a name="snake-case-symbols-methods-vars"></a>
-  Use `snake_case` for symbols, methods and variables.
+  Use `snake_case` for symbols, methods and variables. This includes global variables.
 <sup>[[link](#snake-case-symbols-methods-vars)]</sup>
 
   ```Ruby
@@ -1417,6 +1402,8 @@ condition](#safe-assignment-in-condition).
   def some_method
     ...
   end
+  
+  $logger = Logger.new
   ```
 
 * <a name="camelcase-classes"></a>
@@ -1473,6 +1460,11 @@ condition](#safe-assignment-in-condition).
   # good
   SOME_CONST = 5
   ```
+
+* Prefix private methods with an underscore (``_``).
+
+* When working with actual class objects, Ruby convention is to use the name ``klass``, 
+  not ``class_obj``, ``the_class``, or another convention.
 
 * <a name="bool-methods-qmark"></a>
   The names of predicate methods (methods that return a boolean value) should
