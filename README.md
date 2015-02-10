@@ -575,7 +575,8 @@ Translations of the guide are available in the following languages:
   ```
 
 * <a name="80-character-limits"></a>
-  Limit lines to 80 characters.
+  Limit lines to 80 characters. This does not apply to HTML/ERB files, where it would result
+  in thousand-line files on a regular basis. For those, keep them manageable - perhaps 150 as a max.
 <sup>[[link](#80-character-limits)]</sup>
 
 * <a name="no-trailing-whitespace"></a>
