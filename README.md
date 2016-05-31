@@ -1181,7 +1181,7 @@ condition](#safe-assignment-in-condition).
   Prefix with `_` unused block parameters and local variables. It's also
   acceptable to use just `_` (although it's a bit less descriptive). This
   convention is recognized by the Ruby interpreter and tools like RuboCop and
-  will suppress their unused variable warnings. **Wishabi: Not too important**
+  will suppress their unused variable warnings.
 <sup>[[link](#underscore-unused-vars)]</sup>
 
   ```Ruby
